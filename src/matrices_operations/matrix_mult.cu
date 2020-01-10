@@ -2,12 +2,12 @@
 // Created by henri on 09/01/2020.
 //
 
-#include "matrice_add.hh"
-
+#include "matrix_mult.hh"
 #include "kernels/kernel_mat_op.hh"
 
 
-int mat_add(std::vector<std::vector<float>> A, std::vector<std::vector<float>> B, int N)
+
+int mat_mult(std::vector<std::vector<float>> A, std::vector<std::vector<float>> B, int N)
 {
     cudaError_t rc = cudaSuccess;
 
@@ -45,7 +45,7 @@ int mat_add(std::vector<std::vector<float>> A, std::vector<std::vector<float>> B
     cudaMemset(d_C, 0, SIZE * sizeof(float));
 
     // call the kernel
-    matrixAddition(d_A, d_B, d_C, N);
+    matrixMultiplication(d_A, d_B, d_C, N);
     cudaDeviceSynchronize();
 
     // copy memory back to host
@@ -62,22 +62,26 @@ int mat_add(std::vector<std::vector<float>> A, std::vector<std::vector<float>> B
         }
     }
 
-    // compute CPU add
-    std::vector<std::vector<float>> C_true(N);
 
+    // compute CPU mult
+    std::vector<std::vector<float>> C_true(N);
+    float sum;
     for (int i=0; i<N; i++) {
         std::vector<float> c_true(N);
         C_true[i] = c_true;
         for (int j = 0; j < N; j++) {
-            C_true[i][j] = A[i][j] + B[i][j];
+            sum = 0.f;
+            for (int k = 0; k < N; ++k) {
+                sum += h_A[i*N+k] * h_B[k*N+j];
+            }
+            C_true[i][j] = sum;
         }
     }
-
     bool same = true;
     // check true
     for (int i=0; i<N; i++) {
         for (int j = 0; j < N; j++) {
-            if (C[i][j] != C_true[i][j])
+            if (C[i][j] < C_true[i][j] - 0.0001 || C[i][j] > C_true[i][j] + 0.0001)
                 same = false;
             std::cout << C[i][j] << ' ';
         }
