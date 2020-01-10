@@ -10,6 +10,6 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
-int mat_conv(std::vector<std::vector<float>> A, std::vector<std::vector<float>> K, int N, int KN);
+float* mat_conv(float* A, float* K, int NA, int MA, int NK);
 
 #endif //GPGPU_MATRIX_CONV_HH

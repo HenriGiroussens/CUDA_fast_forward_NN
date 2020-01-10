@@ -10,6 +10,6 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
-int mat_mult(std::vector<std::vector<float>> A, std::vector<std::vector<float>> B, int N);
+float* mat_mult(float* A, float* B, int NA, int MA, int NB, int MB);
 
 #endif //GPGPU_MATRIX_MULT_HH

@@ -10,6 +10,6 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
-int mat_add(std::vector<std::vector<float>> A, std::vector<std::vector<float>> B, int N);
+float* mat_add(float* A, float* B, int NA, int MA, int NB, int MB);
 
 #endif //GPGPU_MATRIX_ADD_HH
