@@ -79,7 +79,7 @@ int main() {
     if (type=="func") {
         int NA = 4;
         float A[4] = {1., -1., 1., 1.};
-        float* C = apply_fct(A, NA, "sigmoid");
+        float* C = apply_fct(A, NA, "exp");
         for (int i=0; i<NA; i++) {
             std::cout << C[i] << ' ';
         }

@@ -8,8 +8,9 @@
 #include <cstdlib>
 #include "../matrices_operations/matrix_add.hh"
 #include "../matrices_operations/matrix_mult.hh"
+#include "Layer.hh"
 
-class Dense {
+class Dense : Layer {
 private:
     int input_dim;
     int output_dim;
@@ -20,7 +21,7 @@ private:
 public:
     Dense(int inputDim, int outputDim, float *weightMatrix, float *biasVector);
 
-    float* forward(float* input);
+    float* forward(float* input) override;
 
 };
 

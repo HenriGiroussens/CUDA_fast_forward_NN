@@ -83,30 +83,17 @@ __global__ void matrixApplyFunctionKernel(float* A, float* B, int N, int func_id
     }
 }
 
-__global__ void matrixApplySoftmaxKernel(float* A, float* B, int N, float sum) {
+__global__ void matrixApplySoftmaxKernel(float* A, float* B, int N, float* sum) {
     int POS = blockIdx.x*blockDim.x+threadIdx.x;
     if (POS < N) {
-        B[POS] = A[POS] / sum;
+        B[POS] = B[POS] / (*sum);
     }
 }
 
 
 __global__ void matrixApplySumKernel(float* A, float* res, int N) {
-    int idx = threadIdx.x;
-    const int blockSize = 1024;
-    int sum = 0;
-    for (int i = idx; i < N; i += blockSize)
-        sum += A[i];
-    __shared__ int r[blockSize];
-    r[idx] = sum;
-    __syncthreads();
-    for (int size = blockSize/2; size>0; size/=2) {
-        if (idx<size)
-            r[idx] += r[idx+size];
-        __syncthreads();
-    }
-    if (idx == 0)
-        *res = r[0];
+    int index = blockIdx.x * blockDim.x + threadIdx.x;
+    atomicAdd(res, A[index]);
 }
 
 
@@ -167,7 +154,7 @@ void matrixApplyFunction(float* A, float* B, int N, std::string func) {
 }
 
 
-void matrixApplySoftmax(float* A, float* B, int N, float sum) {
+void matrixApplySoftmax(float* A, float* B, int N, float* sum) {
     dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
     if (N > 512) {
@@ -178,16 +165,14 @@ void matrixApplySoftmax(float* A, float* B, int N, float sum) {
 }
 
 
-float matrixSum(float* A, int N) {
-    dim3 threadsPerBlock(1024);
+void matrixSum(float* A, float*buff, int N) {
+    dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
     if (N > 512) {
         threadsPerBlock.x = 512;
         blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
     }
-    float res = 0;
-    matrixApplySumKernel<<<blocksPerGrid,threadsPerBlock>>>(A, &res, N);
-    return res;
+    matrixApplySumKernel<<<blocksPerGrid,threadsPerBlock>>>(A, buff, N);
 }
 
 

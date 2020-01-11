@@ -40,7 +40,10 @@ add_executable(network
         src/network.cc
         src/layers/Activation.cc
         src/matrices_operations/apply_fct.cc
-        src/matrices_operations/apply_softmax.cc)
+        src/matrices_operations/apply_softmax.cc
+        src/layers/Model.cc
+        src/layers/Layer.cc
+        src/layers/Dense.cc)
 target_compile_features(network PUBLIC)
 target_include_directories(network PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(network PRIVATE ${CUDART_LIBRARY})
