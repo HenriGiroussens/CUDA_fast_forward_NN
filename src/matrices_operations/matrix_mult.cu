@@ -2,7 +2,7 @@
 // Created by henri on 09/01/2020.
 //
 
-#include "matrix_mult.hh"
+
 #include "kernels/kernel_mat_op.hh"
 
 

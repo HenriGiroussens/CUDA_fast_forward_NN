@@ -1,10 +1,12 @@
 #include "matrix_add.hh"
 #include "matrix_mult.hh"
 #include "matrix_conv.hh"
+#include "apply_fct.hh"
+#include "apply_softmax.hh"
 
 
 int main() {
-    std::string type("conv");
+    std::string type("softmax");
 
     if (type=="add") {
         int NA = 4;
@@ -74,4 +76,21 @@ int main() {
         }
     }
 
+    if (type=="func") {
+        int NA = 4;
+        float A[4] = {1., -1., 1., 1.};
+        float* C = apply_fct(A, NA, "sigmoid");
+        for (int i=0; i<NA; i++) {
+            std::cout << C[i] << ' ';
+        }
+    }
+
+    if (type=="softmax") {
+        int NA = 4;
+        float A[4] = {1., -1., 1., 1.};
+        float* C = apply_softmax(A, NA);
+        for (int i=0; i<NA; i++) {
+            std::cout << C[i] << ' ';
+        }
+    }
 }

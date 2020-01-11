@@ -24,7 +24,9 @@ add_executable(mat_op
         src/matrices_operations/matrix_mult.cu
         src/matrices_operations/kernels/kernel_mat_op.cu
         src/matrices_operations/matrix_conv.cu
-        src/matrices_operations/mat_op.cc src/layers/Dense.cc src/layers/Dense.hh)
+        src/matrices_operations/mat_op.cc
+        src/matrices_operations/apply_fct.cc
+        src/matrices_operations/apply_softmax.cc)
 target_compile_features(mat_op PUBLIC)
 target_include_directories(mat_op PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(mat_op PRIVATE ${CUDART_LIBRARY})
@@ -35,7 +37,10 @@ add_executable(network
         src/matrices_operations/matrix_mult.cu
         src/matrices_operations/kernels/kernel_mat_op.cu
         src/matrices_operations/matrix_conv.cu
-        src/network.cc src/network.cc)
+        src/network.cc
+        src/layers/Activation.cc
+        src/matrices_operations/apply_fct.cc
+        src/matrices_operations/apply_softmax.cc)
 target_compile_features(network PUBLIC)
 target_include_directories(network PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(network PRIVATE ${CUDART_LIBRARY})
