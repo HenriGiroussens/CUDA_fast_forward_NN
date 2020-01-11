@@ -10,7 +10,7 @@
 #include "../matrices_operations/apply_softmax.hh"
 #include "Layer.hh"
 
-class Activation : Layer {
+class Activation : public Layer {
 private:
     std::string function_name;
     int input_dim;

@@ -10,13 +10,13 @@
 
 class Model {
 private:
-    Layer* layers;
+    Layer** layers;
     int nb_layers;
     int input_dim;
     int output_dim;
 
 public:
-    Model(Layer *layers, int nbLayers, int inputDim, int outputDim);
+    Model(Layer **layers, int nbLayers, int inputDim, int outputDim);
 
     float* predict(float* input);
 };

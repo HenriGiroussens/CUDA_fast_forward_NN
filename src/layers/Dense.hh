@@ -10,7 +10,7 @@
 #include "../matrices_operations/matrix_mult.hh"
 #include "Layer.hh"
 
-class Dense : Layer {
+class Dense : public Layer {
 private:
     int input_dim;
     int output_dim;
