@@ -12,19 +12,19 @@ int main() {
     std::string mod = "conv";
 
     if (mod == "dense") {
-        float input[5] = {1., 1., 1., 1., 1.};
+        double input[5] = {1., 1., 1., 1., 1.};
 
-        float W1[25] =
+        double W1[25] =
                 {1., 1., 1., 1., 1.,
                  1., 1., 1., 1., 1.,
                  1., 1., 1., 1., 1.,
                  1., 1., 1., 1., 1.,
                  1., 1., 1., 1., 1.};
-        float B1[5] = {1., 1., 1., 1., 1.};
-        float W2[10] =
+        double B1[5] = {1., 1., 1., 1., 1.};
+        double W2[10] =
                 {1., 1., 1., 1., 1.,
                  1., 1., 1., 1., 1.};
-        float B2[2] = {1., 1.};
+        double B2[2] = {1., 1.};
 
 
         Dense dense_1(5, 5, W1, B1);
@@ -33,24 +33,24 @@ int main() {
         Activation act_2("softmax", 2);
         Layer *layers[4] = {&dense_1, &act_1, &dense_2, &act_2};
         Model model(layers, 4, 5, 2);
-        float *output = model.predict(input);
+        double *output = model.predict(input);
         for (int i = 0; i < 2; i++) {
             std::cout << output[i] << ' ';
         }
     }
 
     if (mod == "conv") {
-        float A[25] =
+        double A[25] =
                 {3., 3., 2., 1., 0.,
                  0., 0., 1., 3., 1.,
                  3., 1., 2., 2., 3.,
                  2., 0., 0., 2., 2,
                  2., 0., 0., 0., 1.};
 
-        float K[9] = {0., 1., 2.,
+        double K[9] = {0., 1., 2.,
                       2., 2., 0.,
                       0., 1., 2.};
-        float W2[18] =
+        double W2[18] =
                 {1., 1.,
                  -1., -1.,
                  1., 1.,
@@ -60,7 +60,7 @@ int main() {
                  1., 1.,
                  -1., -1.,
                  1., 1.};
-        float B2[2] = {1., 1.};
+        double B2[2] = {1., 1.};
 
 
         Conv2D conv_1(5, 5, K, 3, "valid");
@@ -69,7 +69,7 @@ int main() {
         Activation act_2("softmax", 2);
         Layer *layers[4] = {&conv_1, &act_1, &dense_2, &act_2};
         Model model(layers, 4, 5, 2);
-        float *output = model.predict(A);
+        double *output = model.predict(A);
         for (int i = 0; i < 2; i++) {
             std::cout << output[i] << ' ';
         }

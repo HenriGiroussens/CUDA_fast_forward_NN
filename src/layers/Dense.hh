@@ -14,14 +14,14 @@ class Dense : public Layer {
 private:
     int input_dim;
     int output_dim;
-    float* weight_matrix;
-    float* bias_vector;
+    double* weight_matrix;
+    double* bias_vector;
 
 
 public:
-    Dense(int inputDim, int outputDim, float *weightMatrix, float *biasVector);
+    Dense(int inputDim, int outputDim, double *weightMatrix, double *biasVector);
 
-    float* forward(float* input) override;
+    double* forward(double* input) override;
 
 };
 

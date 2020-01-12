@@ -10,6 +10,6 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
-float* apply_fct(float* A, int N, std::string func);
+double* apply_fct(double* A, int N, std::string func);
 
 #endif //GPGPU_APPLY_FCT_HH

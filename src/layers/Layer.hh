@@ -9,7 +9,7 @@
 class Layer {
 
 public:
-    virtual float* forward(float *input) = 0;
+    virtual double* forward(double *input) = 0;
 };
 
 

@@ -7,7 +7,7 @@
 #include "kernels/kernel_mat_op.hh"
 
 
-float* mat_add(float* A, float* B, int NA, int MA, int NB, int MB)
+double* mat_add(double* A, double* B, int NA, int MA, int NB, int MB)
 {
     if (NA != NB && MA != MB) {
         std::cerr << "shape error" << std::endl;
@@ -17,29 +17,29 @@ float* mat_add(float* A, float* B, int NA, int MA, int NB, int MB)
     int SIZE = NA*MA;
     cudaError_t rc = cudaSuccess;
     // Allocate memory on the device
-    float* d_A;
-    float* d_B;
-    float* d_C;
-    auto* C = (float*)malloc(SIZE * sizeof(float));
+    double* d_A;
+    double* d_B;
+    double* d_C;
+    auto* C = (double*)malloc(SIZE * sizeof(double));
 
-    cudaMalloc(&d_A, SIZE * sizeof(float));
-    cudaMalloc(&d_B, SIZE * sizeof(float));
-    cudaMalloc(&d_C, SIZE * sizeof(float));
+    cudaMalloc(&d_A, SIZE * sizeof(double));
+    cudaMalloc(&d_B, SIZE * sizeof(double));
+    cudaMalloc(&d_C, SIZE * sizeof(double));
 
 
     // Copy to device
-    rc = cudaMemcpy(d_A, &A[0], SIZE * sizeof(float), cudaMemcpyHostToDevice);
+    rc = cudaMemcpy(d_A, &A[0], SIZE * sizeof(double), cudaMemcpyHostToDevice);
     if (rc)
         std::cout << "error memcpy\n";
-    cudaMemcpy(d_B, &B[0], SIZE * sizeof(float), cudaMemcpyHostToDevice);
-    cudaMemset(d_C, 0, SIZE * sizeof(float));
+    cudaMemcpy(d_B, &B[0], SIZE * sizeof(double), cudaMemcpyHostToDevice);
+    cudaMemset(d_C, 0, SIZE * sizeof(double));
 
     // call the kernel
     matrixAddition(d_A, d_B, d_C, NA, MA);
     cudaDeviceSynchronize();
 
     // copy memory back to host
-    cudaMemcpy(&C[0], d_C, SIZE * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(&C[0], d_C, SIZE * sizeof(double), cudaMemcpyDeviceToHost);
 
     return C;
 }

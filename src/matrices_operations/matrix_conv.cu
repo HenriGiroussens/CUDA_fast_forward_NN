@@ -5,7 +5,7 @@
 #include "matrix_conv.hh"
 #include "kernels/kernel_mat_op.hh"
 
-float* mat_conv(float* A, float* K, int NA, int MA, int NK, std::string padding) {
+double* mat_conv(double* A, double* K, int NA, int MA, int NK, std::string padding) {
 
     if (NK % 2 == 0) {
         std::cerr << "shape error" << std::endl;
@@ -19,46 +19,47 @@ float* mat_conv(float* A, float* K, int NA, int MA, int NK, std::string padding)
 
 
     // Allocate memory on the device
-    float* d_A;
-    float* d_B;
-    float* d_C;
+    double* d_A;
+    double* d_B;
+    double* d_C;
 
-    cudaMalloc(&d_A, SIZE_A * sizeof(float));
-    cudaMalloc(&d_B, SIZE_K * sizeof(float));
+    cudaMalloc(&d_A, SIZE_A * sizeof(double));
+    cudaMalloc(&d_B, SIZE_K * sizeof(double));
 
 
     // Copy to device
-    rc = cudaMemcpy(d_A, &A[0], SIZE_A * sizeof(float), cudaMemcpyHostToDevice);
+    rc = cudaMemcpy(d_A, &A[0], SIZE_A * sizeof(double), cudaMemcpyHostToDevice);
     if (rc)
         std::cout << "error memcpy\n";
-    cudaMemcpy(d_B, &K[0], SIZE_K * sizeof(float), cudaMemcpyHostToDevice);
+    cudaMemcpy(d_B, &K[0], SIZE_K * sizeof(double), cudaMemcpyHostToDevice);
 
     if (padding == "same") {
         int SIZE_C = SIZE_A;
-        auto *C = (float *) malloc(SIZE_C * sizeof(float));
-        cudaMalloc(&d_C, SIZE_C * sizeof(float));
-        cudaMemset(d_C, 0, SIZE_C * sizeof(float));
+        auto *C = (double *) malloc(SIZE_C * sizeof(double));
+        cudaMalloc(&d_C, SIZE_C * sizeof(double));
+        cudaMemset(d_C, 0, SIZE_C * sizeof(double));
 
         // call the kernel
         matrixConvSame(d_A, d_B, d_C, NA, MA, NK);
         cudaDeviceSynchronize();
 
         // copy memory back to host
-        cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(float), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(double), cudaMemcpyDeviceToHost);
         return C;
     }
+
     else if (padding == "valid") {
         int SIZE_C = (NA - 2*(NK/2)) * (MA - 2*(NK/2));
-        auto *C = (float *) malloc(SIZE_C * sizeof(float));
-        cudaMalloc(&d_C, SIZE_C * sizeof(float));
-        cudaMemset(d_C, 0, SIZE_C * sizeof(float));
+        auto *C = (double *) malloc(SIZE_C * sizeof(double));
+        cudaMalloc(&d_C, SIZE_C * sizeof(double));
+        cudaMemset(d_C, 0, SIZE_C * sizeof(double));
 
         // call the kernel
         matrixConvValid(d_A, d_B, d_C, NA, MA, NK);
         cudaDeviceSynchronize();
 
         // copy memory back to host
-        cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(float), cudaMemcpyDeviceToHost);
+        cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(double), cudaMemcpyDeviceToHost);
         return C;
     }
 

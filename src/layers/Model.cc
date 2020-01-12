@@ -10,8 +10,8 @@ Model::Model(Layer **layers, int nbLayers, int inputDim, int outputDim) : layers
 
 
 
-float *Model::predict(float *input) {
-    float* tmp = layers[0]->forward(input);
+double *Model::predict(double *input) {
+    double* tmp = layers[0]->forward(input);
     for (int i = 1; i < nb_layers; ++i) {
         tmp = layers[i]->forward(tmp);
     }

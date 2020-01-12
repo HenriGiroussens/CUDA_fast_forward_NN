@@ -2,12 +2,12 @@
 
 
 
-__global__ void matrixAdditionKernel(float* A, float* B, float* C, int N, int M) {
+__global__ void matrixAdditionKernel(double* A, double* B, double* C, int N, int M) {
 
     int ROW = blockIdx.y * blockDim.y + threadIdx.y;
     int COL = blockIdx.x * blockDim.x + threadIdx.x;
 
-    float tmpSum = 0;
+    double tmpSum = 0;
 
 
     if (ROW < N && COL < M) {
@@ -18,12 +18,12 @@ __global__ void matrixAdditionKernel(float* A, float* B, float* C, int N, int M)
 }
 
 
-__global__ void matrixMultiplicationKernel(float* A, float* B, float* C, int NA, int MA, int NB, int MB) {
+__global__ void matrixMultiplicationKernel(double* A, double* B, double* C, int NA, int MA, int NB, int MB) {
 
     int ROW = blockIdx.y*blockDim.y+threadIdx.y;
     int COL = blockIdx.x*blockDim.x+threadIdx.x;
 
-    float tmpSum = 0;
+    double tmpSum = 0;
 
     if (ROW < NA && COL < MB) {
         // each thread computes one element of the block sub-matrix
@@ -35,12 +35,12 @@ __global__ void matrixMultiplicationKernel(float* A, float* B, float* C, int NA,
 }
 
 
-__global__ void matrixConvolutionSameKernel(float* A, float* K, float* C, int N, int M, int KN) {
+__global__ void matrixConvolutionSameKernel(double* A, double* K, double* C, int N, int M, int KN) {
 
     int ROW = blockIdx.y*blockDim.y+threadIdx.y;
     int COL = blockIdx.x*blockDim.x+threadIdx.x;
 
-    float tmpSum = 0;
+    double tmpSum = 0;
     if (ROW < N && COL < M) {
         // each thread computes one element of the block sub-matrix
         for (int i = KN / 2 * -1; i <= KN / 2; i++) {
@@ -54,12 +54,12 @@ __global__ void matrixConvolutionSameKernel(float* A, float* K, float* C, int N,
 }
 
 
-__global__ void matrixConvolutionValidKernel(float* A, float* K, float* C, int N, int M, int KN) {
+__global__ void matrixConvolutionValidKernel(double* A, double* K, double* C, int N, int M, int KN) {
 
     int ROW = blockIdx.y*blockDim.y+threadIdx.y;
     int COL = blockIdx.x*blockDim.x+threadIdx.x;
 
-    float tmpSum = 0;
+    double tmpSum = 0;
     if (ROW < N - 2*(KN/2) && COL < M - 2*(KN/2)) {
         // each thread computes one element of the block sub-matrix
         for (int i = KN / 2 * -1; i <= KN / 2; i++) {
@@ -73,16 +73,16 @@ __global__ void matrixConvolutionValidKernel(float* A, float* K, float* C, int N
 
 
 
-__device__ float relu(float x) {
+__device__ double relu(double x) {
     return x > 0 ? x : 0;
 }
 
-__device__ float sigmoid(float x) {
+__device__ double sigmoid(double x) {
     return 1 / (1 + std::exp(-x));
 }
 
 
-__global__ void matrixApplyFunctionKernel(float* A, float* B, int N, int func_id) {
+__global__ void matrixApplyFunctionKernel(double* A, double* B, int N, int func_id) {
     int POS = blockIdx.x * blockDim.x + threadIdx.x;
     if (POS < N) {
         if (func_id == 1) {
@@ -102,7 +102,7 @@ __global__ void matrixApplyFunctionKernel(float* A, float* B, int N, int func_id
     }
 }
 
-__global__ void matrixApplySoftmaxKernel(float* A, float* B, int N, float* sum) {
+__global__ void matrixApplySoftmaxKernel(double* A, double* B, int N, double* sum) {
     int POS = blockIdx.x*blockDim.x+threadIdx.x;
     if (POS < N) {
         B[POS] = B[POS] / (*sum);
@@ -110,13 +110,13 @@ __global__ void matrixApplySoftmaxKernel(float* A, float* B, int N, float* sum) 
 }
 
 
-__global__ void matrixApplySumKernel(float* A, float* res, int N) {
+__global__ void matrixApplySumKernel(double* A, double* res, int N) {
     int index = blockIdx.x * blockDim.x + threadIdx.x;
-    atomicAdd(res, A[index]);
+    atomicAdd((float* )res, (float)A[index]);
 }
 
 
-void matrixAddition(float *A, float *B, float *C, int N, int M) {
+void matrixAddition(double *A, double *B, double *C, int N, int M) {
     dim3 threadsPerBlock(M, N);
     dim3 blocksPerGrid(1, 1);
     if (N*M > 512) {
@@ -129,7 +129,7 @@ void matrixAddition(float *A, float *B, float *C, int N, int M) {
 
 }
 
-void matrixMultiplication(float *A, float *B, float *C, int NA, int MA, int NB, int MB){
+void matrixMultiplication(double *A, double *B, double *C, int NA, int MA, int NB, int MB){
     dim3 threadsPerBlock(MB, NA);
     dim3 blocksPerGrid(1, 1);
     if (NA*NA > 512) {
@@ -141,7 +141,7 @@ void matrixMultiplication(float *A, float *B, float *C, int NA, int MA, int NB, 
     matrixMultiplicationKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, C, NA, MA, NB, MB);
 }
 
-void matrixConvSame(float *A, float *K, float *C, int N, int M, int KN) {
+void matrixConvSame(double *A, double *K, double *C, int N, int M, int KN) {
     dim3 threadsPerBlock(M, N);
     dim3 blocksPerGrid(1, 1);
     if (M*N > 512) {
@@ -154,7 +154,7 @@ void matrixConvSame(float *A, float *K, float *C, int N, int M, int KN) {
 }
 
 
-void matrixConvValid(float *A, float *K, float *C, int N, int M, int KN) {
+void matrixConvValid(double *A, double *K, double *C, int N, int M, int KN) {
     dim3 threadsPerBlock(M - 2*(KN/2), N - 2*(KN/2));
     dim3 blocksPerGrid(1, 1);
     if (M*N > 512) {
@@ -167,7 +167,7 @@ void matrixConvValid(float *A, float *K, float *C, int N, int M, int KN) {
 }
 
 
-void matrixApplyFunction(float* A, float* B, int N, std::string func) {
+void matrixApplyFunction(double* A, double* B, int N, std::string func) {
     dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
     if (N > 512) {
@@ -187,7 +187,7 @@ void matrixApplyFunction(float* A, float* B, int N, std::string func) {
 }
 
 
-void matrixApplySoftmax(float* A, float* B, int N, float* sum) {
+void matrixApplySoftmax(double* A, double* B, int N, double* sum) {
     dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
     if (N > 512) {
@@ -198,7 +198,7 @@ void matrixApplySoftmax(float* A, float* B, int N, float* sum) {
 }
 
 
-void matrixSum(float* A, float*buff, int N) {
+void matrixSum(double* A, double*buff, int N) {
     dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
     if (N > 512) {

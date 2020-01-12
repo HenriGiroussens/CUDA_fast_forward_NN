@@ -18,7 +18,7 @@ private:
 public:
     Model(Layer **layers, int nbLayers, int inputDim, int outputDim);
 
-    float* predict(float* input);
+    double* predict(double* input);
 };
 
 

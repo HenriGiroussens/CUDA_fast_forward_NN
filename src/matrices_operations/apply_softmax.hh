@@ -10,6 +10,6 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
-float* apply_softmax(float* A, int N);
+double* apply_softmax(double* A, int N);
 
 #endif //GPGPU_APPLY_SOFTMAX_HH

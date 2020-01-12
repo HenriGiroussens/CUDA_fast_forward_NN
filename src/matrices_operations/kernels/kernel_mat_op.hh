@@ -11,12 +11,12 @@
 #include <cstdlib>
 #include "device_launch_parameters.h"
 
-void matrixMultiplication(float *A, float *B, float *C, int NA, int MA, int NB, int MB);
-void matrixAddition(float *A, float *B, float *C, int N, int M);
-void matrixConvSame(float *A, float *K, float *C, int N, int M, int KN);
-void matrixConvValid(float *A, float *K, float *C, int N, int M, int KN);
-void matrixApplyFunction(float* A, float* B, int N, std::string func);
-void matrixSum(float* A, float* buff, int N);
-void matrixApplySoftmax(float* A, float* B, int N, float* sum);
+void matrixMultiplication(double *A, double *B, double *C, int NA, int MA, int NB, int MB);
+void matrixAddition(double *A, double *B, double *C, int N, int M);
+void matrixConvSame(double *A, double *K, double *C, int N, int M, int KN);
+void matrixConvValid(double *A, double *K, double *C, int N, int M, int KN);
+void matrixApplyFunction(double* A, double* B, int N, std::string func);
+void matrixSum(double* A, double* buff, int N);
+void matrixApplySoftmax(double* A, double* B, int N, double* sum);
 
 #endif //CMAKE_AND_CUDA_KERNEL_MAT_OP_HH

@@ -5,25 +5,25 @@
 #include "apply_softmax.hh"
 #include "kernels/kernel_mat_op.hh"
 
-float* apply_softmax(float* A, int N) {
+double* apply_softmax(double* A, int N) {
     cudaError_t rc = cudaSuccess;
     // Allocate memory on the device
-    float* d_A;
-    float* d_B;
-    float* buff;
-    auto* B = (float*)malloc(N * sizeof(float));
+    double* d_A;
+    double* d_B;
+    double* buff;
+    auto* B = (double*)malloc(N * sizeof(double));
 
-    cudaMalloc(&d_A, N * sizeof(float));
-    cudaMalloc(&d_B, N * sizeof(float));
-    cudaMalloc(&buff, sizeof(float));
+    cudaMalloc(&d_A, N * sizeof(double));
+    cudaMalloc(&d_B, N * sizeof(double));
+    cudaMalloc(&buff, sizeof(double));
 
 
     // Copy to device
-    rc = cudaMemcpy(d_A, &A[0], N* sizeof(float), cudaMemcpyHostToDevice);
+    rc = cudaMemcpy(d_A, &A[0], N* sizeof(double), cudaMemcpyHostToDevice);
     if (rc)
         std::cout << "error memcpy\n";
-    cudaMemset(d_B, 0, N * sizeof(float));
-    cudaMemset(buff, 0, sizeof(float));
+    cudaMemset(d_B, 0, N * sizeof(double));
+    cudaMemset(buff, 0, sizeof(double));
 
     // call the kernel
     matrixApplyFunction(d_A, d_B, N, "exp");
@@ -34,7 +34,7 @@ float* apply_softmax(float* A, int N) {
     cudaDeviceSynchronize();
 
     // copy memory back to host
-    cudaMemcpy(&B[0], d_B, N * sizeof(float), cudaMemcpyDeviceToHost);
+    cudaMemcpy(&B[0], d_B, N * sizeof(double), cudaMemcpyDeviceToHost);
 
     return B;
 }
