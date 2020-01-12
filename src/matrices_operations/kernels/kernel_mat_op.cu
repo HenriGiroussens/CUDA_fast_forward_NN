@@ -111,8 +111,24 @@ __global__ void matrixApplySoftmaxKernel(double* A, double* B, int N, double* su
 
 
 __global__ void matrixApplySumKernel(double* A, double* res, int N) {
-    int index = blockIdx.x * blockDim.x + threadIdx.x;
-    atomicAdd((float* )res, (float)A[index]);
+
+    __shared__ double sdata[256];
+
+// perform first level of reduction,
+// reading from global memory, writing to shared memory
+    unsigned int tid = threadIdx.x;
+    unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
+    sdata[tid] = A[i] + A[i+blockDim.x];
+    __syncthreads();
+// do reduction in shared mem
+    for (unsigned int s=blockDim.x/2; s>0; s>>=1) {
+        if (tid < s) {
+            sdata[tid] += sdata[tid + s];
+        }
+        __syncthreads();
+    }
+// write result for this block to global mem
+    if (tid == 0) res[blockIdx.x] = sdata[0];
 }
 
 

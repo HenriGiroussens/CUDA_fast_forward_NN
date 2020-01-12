@@ -6,7 +6,7 @@
 
 
 int main() {
-    std::string type("test_dense");
+    std::string type("softmax");
 
     if (type=="add") {
         int NA = 4;
