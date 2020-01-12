@@ -5,8 +5,10 @@ project (GPGPU CUDA CXX)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR} )
 find_package(PNG REQUIRED)
 find_package(CUDA REQUIRED)
+find_package(OpenCV REQUIRED)
 find_library(CUDART_LIBRARY cudart ${CMAKE_CUDA_IMPLICIT_LINK_DIRECTORIES})
-
+set(OpenCV_DIR "/usr/lib/opencv")
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -W -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
@@ -49,4 +51,8 @@ target_include_directories(network PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTOR
 target_link_libraries(network PRIVATE ${CUDART_LIBRARY})
 
 
-
+add_executable(cam
+        src/read_from_cam.cc)
+target_compile_features(cam PUBLIC)
+target_include_directories(cam PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+target_link_libraries(cam PRIVATE ${CUDART_LIBRARY} ${OpenCV_LIBS})
