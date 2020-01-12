@@ -1,12 +1,12 @@
-#include "matrix_add.hh"
-#include "matrix_mult.hh"
-#include "matrix_conv.hh"
-#include "apply_fct.hh"
-#include "apply_softmax.hh"
+#include "matrices_operations/matrix_add.hh"
+#include "matrices_operations/matrix_mult.hh"
+#include "matrices_operations/matrix_conv.hh"
+#include "matrices_operations/apply_fct.hh"
+#include "matrices_operations/apply_softmax.hh"
 
 
 int main() {
-    std::string type("conv_valid");
+    std::string type("test_dense");
 
     if (type=="add") {
         int NA = 4;
@@ -52,6 +52,32 @@ int main() {
             std::cout << '\n';
         }
     }
+
+
+    if (type=="test_dense") {
+        float A[9] =
+                {12., 12., 17., 10., 17., 19., 9., 6., 14.};
+        float W2[18] =
+                {1., 1.,
+                 -1., -1.,
+                 1., 1.,
+                 -1., -1.,
+                 1., 1.,
+                 -1., -1.,
+                 1., 1.,
+                 -1., -1.,
+                 1., 1.};
+        float B2[2] = {1., 1.};
+        float* C = mat_mult(A, W2, 1, 9, 9, 2);
+        float* res = mat_add(C, B2, 1, 2, 1, 2);
+        for (int i=0; i<1; i++) {
+            for (int j = 0; j < 2; j++) {
+                std::cout << res[i * 2 + j] << ' ';
+            }
+            std::cout << '\n';
+        }
+    }
+
 
 
     if (type=="conv_valid") {

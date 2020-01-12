@@ -24,7 +24,7 @@ add_executable(mat_op
         src/matrices_operations/matrix_mult.cu
         src/matrices_operations/kernels/kernel_mat_op.cu
         src/matrices_operations/matrix_conv.cu
-        src/matrices_operations/mat_op.cc
+        src/mat_op.cc
         src/matrices_operations/apply_fct.cc
         src/matrices_operations/apply_softmax.cc)
 target_compile_features(mat_op PUBLIC)
