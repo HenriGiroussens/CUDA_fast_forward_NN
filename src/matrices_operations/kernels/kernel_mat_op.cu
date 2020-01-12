@@ -35,7 +35,7 @@ __global__ void matrixMultiplicationKernel(float* A, float* B, float* C, int NA,
 }
 
 
-__global__ void matrixConvolutionKernel(float* A, float* K, float* C, int N, int M, int KN) {
+__global__ void matrixConvolutionSameKernel(float* A, float* K, float* C, int N, int M, int KN) {
 
     int ROW = blockIdx.y*blockDim.y+threadIdx.y;
     int COL = blockIdx.x*blockDim.x+threadIdx.x;
@@ -52,6 +52,25 @@ __global__ void matrixConvolutionKernel(float* A, float* K, float* C, int N, int
     }
     C[ROW * M + COL] = tmpSum;
 }
+
+
+__global__ void matrixConvolutionValidKernel(float* A, float* K, float* C, int N, int M, int KN) {
+
+    int ROW = blockIdx.y*blockDim.y+threadIdx.y;
+    int COL = blockIdx.x*blockDim.x+threadIdx.x;
+
+    float tmpSum = 0;
+    if (ROW < N - 2*(KN/2) && COL < M - 2*(KN/2)) {
+        // each thread computes one element of the block sub-matrix
+        for (int i = KN / 2 * -1; i <= KN / 2; i++) {
+            for (int j = KN / 2 * -1; j <= KN / 2; j++) {
+                tmpSum += A[(ROW + i + KN/2) * M + COL + j + KN/2] * K[(KN / 2 + i) * KN + j + KN / 2];
+            }
+        }
+        C[ROW * (M - 2*(KN/2)) + COL] = tmpSum;
+    }
+}
+
 
 
 __device__ float relu(float x) {
@@ -122,7 +141,7 @@ void matrixMultiplication(float *A, float *B, float *C, int NA, int MA, int NB, 
     matrixMultiplicationKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, C, NA, MA, NB, MB);
 }
 
-void matrixConv(float *A, float *K, float *C, int N, int M, int KN) {
+void matrixConvSame(float *A, float *K, float *C, int N, int M, int KN) {
     dim3 threadsPerBlock(M, N);
     dim3 blocksPerGrid(1, 1);
     if (M*N > 512) {
@@ -131,8 +150,22 @@ void matrixConv(float *A, float *K, float *C, int N, int M, int KN) {
         blocksPerGrid.x = ceil(double(M)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(N)/double(threadsPerBlock.y));
     }
-    matrixConvolutionKernel<<<blocksPerGrid,threadsPerBlock>>>(A, K, C, N, M, KN);
+    matrixConvolutionSameKernel<<<blocksPerGrid,threadsPerBlock>>>(A, K, C, N, M, KN);
 }
+
+
+void matrixConvValid(float *A, float *K, float *C, int N, int M, int KN) {
+    dim3 threadsPerBlock(M - 2*(KN/2), N - 2*(KN/2));
+    dim3 blocksPerGrid(1, 1);
+    if (M*N > 512) {
+        threadsPerBlock.x = 512;
+        threadsPerBlock.y = 512;
+        blocksPerGrid.x = ceil(double(M)/double(threadsPerBlock.x));
+        blocksPerGrid.y = ceil(double(N)/double(threadsPerBlock.y));
+    }
+    matrixConvolutionValidKernel<<<blocksPerGrid,threadsPerBlock>>>(A, K, C, N, M, KN);
+}
+
 
 void matrixApplyFunction(float* A, float* B, int N, std::string func) {
     dim3 threadsPerBlock(N);

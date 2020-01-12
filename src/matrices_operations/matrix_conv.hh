@@ -10,6 +10,6 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
-float* mat_conv(float* A, float* K, int NA, int MA, int NK);
+float* mat_conv(float* A, float* K, int NA, int MA, int NK, std::string padding);
 
 #endif //GPGPU_MATRIX_CONV_HH
