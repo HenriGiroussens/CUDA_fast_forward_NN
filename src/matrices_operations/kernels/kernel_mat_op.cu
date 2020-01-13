@@ -132,6 +132,29 @@ __global__ void matrixApplySumKernel(double* A, double* res, int N) {
 }
 
 
+__global__ void matrixAvgPoolingKernel(double *A, double *B, int N, int M, int output_N, int output_M, int stride)  {
+    int ROW_out = blockIdx.y*blockDim.y+threadIdx.y;
+    int COL_out = blockIdx.x*blockDim.x+threadIdx.x;
+
+    double sum = 0;
+    if (ROW_out < output_N && COL_out < output_M) {
+        // each thread computes one element of the block sub-matrix
+        for (int i = 0; i < stride; i++) {
+            for (int j = stride; j < stride; j++) {
+                int ROW_in = ROW_out * stride + i;
+                int COL_in = COL_out * stride + j;
+                if (ROW_in < N && COL_in < M)
+                    sum += A[ROW_in*M + COL_in];
+            }
+        }
+        B[ROW_out * output_M + COL_out] = sum / (stride * stride);
+    }
+}
+
+
+
+
+
 void matrixAddition(double *A, double *B, double *C, int N, int M) {
     dim3 threadsPerBlock(M, N);
     dim3 blocksPerGrid(1, 1);
@@ -222,6 +245,19 @@ void matrixSum(double* A, double*buff, int N) {
         blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
     }
     matrixApplySumKernel<<<blocksPerGrid,threadsPerBlock>>>(A, buff, N);
+}
+
+
+void matrixAvgPooling(double *A, double *B, int N, int M, int output_N, int output_M, int stride) {
+    dim3 threadsPerBlock(output_M, output_N);
+    dim3 blocksPerGrid(1, 1);
+    if (M*N > 512) {
+        threadsPerBlock.x = 512;
+        threadsPerBlock.y = 512;
+        blocksPerGrid.x = ceil(double(M)/double(threadsPerBlock.x));
+        blocksPerGrid.y = ceil(double(N)/double(threadsPerBlock.y));
+    }
+    matrixAvgPoolingKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, N, M, output_N, output_M, stride);
 }
 
 
