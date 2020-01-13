@@ -42,21 +42,41 @@ int main() {
     }
 
     if (mod == "conv") {
-        double A_tmp[25] =
+        double A_tmp[2][25] = {
                 {3., 3., 2., 1., 0.,
-                 0., 0., 1., 3., 1.,
-                 3., 1., 2., 2., 3.,
-                 2., 0., 0., 2., 2,
-                 2., 0., 0., 0., 1.};
-        double* A_1 = A_tmp;
-        double** A = &A_1;
+                        0., 0., 1., 3., 1.,
+                        3., 1., 2., 2., 3.,
+                        2., 0., 0., 2., 2,
+                        2., 0., 0., 0., 1.},
+                {3., 3., 2., 1., 0.,
+                        0., 0., 1., 3., 1.,
+                        3., 1., 2., 2., 3.,
+                        2., 0., 0., 2., 2,
+                        2., 0., 0., 0., 1.}
+        };
+        auto** A = static_cast<double **>(malloc(2 * sizeof(double *)));
+        for (int i = 0; i < 2; ++i){
+            auto* A_in = static_cast<double *>(malloc(25 * sizeof(double)));
+            A[i] = A_in;
+            for (int j = 0; j < 25; ++j)
+                A[i][j] = A_tmp[i][j];
+        }
 
-        double K_in [9] = {0., 1., 2.,
-                      2., 2., 0.,
-                      0., 1., 2.};
-        double *K_1 = K_in;
-        double **K_2 = &K_1;
-        double ***K = &K_2;
+        double K_tmp [2][9] = {{0., 1., 2.,
+                                      2., 2., 0.,
+                                      0., 1., 2.},
+                              {0., 1., 2.,
+                                      2., 2., 0.,
+                                      0., 1., 2.}
+        };
+        auto** K2 = static_cast<double **>(malloc(2 * sizeof(double *)));
+        for (int i = 0; i < 2; ++i){
+            auto* K2_in = static_cast<double *>(malloc(25 * sizeof(double)));
+            K2[i] = K2_in;
+            for (int j = 0; j < 25; ++j)
+                K2[i][j] = K_tmp[i][j];
+        }
+        double ***K = &K2;
         double W2[18] =
                 {1., 1.,
                  -1., -1.,
@@ -70,7 +90,7 @@ int main() {
         double B2[2] = {1., 1.};
 
 
-        Conv2D conv_1(5, 5, 1, K, 1, 3, "valid");
+        Conv2D conv_1(5, 5, 2, K, 1, 3, "valid");
         Activation act_1("relu", 9);
         Dense dense_2(9, 2, W2, B2);
         Activation act_2("softmax", 2);
