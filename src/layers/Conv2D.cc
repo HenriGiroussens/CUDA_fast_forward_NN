@@ -39,6 +39,8 @@ double **Conv2D::forward(double **input) {
                 else if (padding == "valid")
                     partial_output_all_channels = mat_add(partial_output_all_channels, partial_output_single_channel, input_N - kernel_size + 1, input_M - kernel_size + 1, input_N - kernel_size + 1, input_M - kernel_size + 1);
             }
+            free(partial_output_single_channel);
+            free(input[j]);
         }
         partial_output_all_channels = mat_add_scalar(partial_output_all_channels, bias_vector[i], input_N, input_M);
         output[i] = partial_output_all_channels;

@@ -36,5 +36,8 @@ double* apply_softmax(double* A, int N) {
     // copy memory back to host
     cudaMemcpy(&B[0], d_B, N * sizeof(double), cudaMemcpyDeviceToHost);
 
+    cudaFree(d_A);
+    cudaFree(d_B);
+
     return B;
 }

@@ -15,6 +15,7 @@ double **AveragePooling2D::forward(double **input) {
         double *output;
         output = avg_pooling_2D(input[i], input_N, input_M, strides, padding);
         out[i] = output;
+        free(input[i]);
     }
     return out;
 }

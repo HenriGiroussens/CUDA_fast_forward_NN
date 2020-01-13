@@ -16,6 +16,7 @@ double **Activation::forward(double **input) {
         else
             output = apply_softmax(input[i], input_dim);
         out[i] = output;
+        free(input[i]);
     }
     return out;
 }

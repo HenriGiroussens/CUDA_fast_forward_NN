@@ -45,6 +45,10 @@ double* mat_conv(double* A, double* K, int NA, int MA, int NK, std::string paddi
 
         // copy memory back to host
         cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(double), cudaMemcpyDeviceToHost);
+
+        cudaFree(d_A);
+        cudaFree(d_B);
+        cudaFree(d_C);
         return C;
     }
 
@@ -60,6 +64,10 @@ double* mat_conv(double* A, double* K, int NA, int MA, int NK, std::string paddi
 
         // copy memory back to host
         cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(double), cudaMemcpyDeviceToHost);
+
+        cudaFree(d_A);
+        cudaFree(d_B);
+        cudaFree(d_C);
         return C;
     }
 

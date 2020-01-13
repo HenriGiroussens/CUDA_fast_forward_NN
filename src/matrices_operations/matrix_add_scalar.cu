@@ -30,5 +30,8 @@ double* mat_add_scalar(double* A, double scalar, int N, int M) {
     // copy memory back to host
     cudaMemcpy(&B[0], d_B, SIZE * sizeof(double), cudaMemcpyDeviceToHost);
 
+    cudaFree(d_A);
+    cudaFree(d_B);
+
     return B;
 }

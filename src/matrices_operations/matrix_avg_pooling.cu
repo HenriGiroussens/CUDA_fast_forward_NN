@@ -38,6 +38,9 @@ double* avg_pooling_2D(double* A, int N, int M, int strides, std::string padding
     // copy memory back to host
     cudaMemcpy(&B[0], d_B, SIZE * sizeof(double), cudaMemcpyDeviceToHost);
 
+    cudaFree(d_A);
+    cudaFree(d_B);
+
     return B;
 
 }

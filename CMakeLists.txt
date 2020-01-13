@@ -28,7 +28,7 @@ add_executable(mat_op
         src/matrices_operations/matrix_conv.cu
         src/mat_op.cc
         src/matrices_operations/apply_fct.cc
-        src/matrices_operations/apply_softmax.cc src/matrices_operations/matrix_avg_pooling.cu src/matrices_operations/matrix_avg_pooling.hh src/matrices_operations/matrix_add_scalar.cc src/matrices_operations/matrix_add_scalar.hh)
+        src/matrices_operations/apply_softmax.cc src/matrices_operations/matrix_avg_pooling.cu src/matrices_operations/matrix_avg_pooling.hh src/matrices_operations/matrix_add_scalar.cu src/matrices_operations/matrix_add_scalar.hh)
 target_compile_features(mat_op PUBLIC)
 target_include_directories(mat_op PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(mat_op PRIVATE ${CUDART_LIBRARY})
@@ -45,7 +45,7 @@ add_executable(network
         src/matrices_operations/apply_softmax.cc
         src/layers/Model.cc
         src/layers/Layer.cc
-        src/layers/Dense.cc src/layers/Conv2D.cc src/layers/Conv2D.hh src/layers/Flatten.cc src/layers/Flatten.hh src/layers/AveragePooling2D.cc src/layers/AveragePooling2D.hh src/matrices_operations/matrix_avg_pooling.cu src/matrices_operations/matrix_avg_pooling.hh src/matrices_operations/matrix_add_scalar.cc src/matrices_operations/matrix_add_scalar.hh)
+        src/layers/Dense.cc src/layers/Conv2D.cc src/layers/Conv2D.hh src/layers/Flatten.cc src/layers/Flatten.hh src/layers/AveragePooling2D.cc src/layers/AveragePooling2D.hh src/matrices_operations/matrix_avg_pooling.cu src/matrices_operations/matrix_avg_pooling.hh src/matrices_operations/matrix_add_scalar.cu src/matrices_operations/matrix_add_scalar.hh)
 target_compile_features(network PUBLIC)
 target_include_directories(network PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(network PRIVATE ${CUDART_LIBRARY})
