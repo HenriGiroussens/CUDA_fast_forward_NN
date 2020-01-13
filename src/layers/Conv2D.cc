@@ -8,12 +8,14 @@
 #include "Conv2D.hh"
 #include "../matrices_operations/matrix_conv.hh"
 #include "../matrices_operations/matrix_add.hh"
+#include "../matrices_operations/matrix_add_scalar.hh"
 
+Conv2D::Conv2D(int inputN, int inputM, int inputChannels, double ***kernels, double *biasVector, int outputChannels,
+               int kernelSize, const std::string &padding) : input_N(inputN), input_M(inputM),
+                                                             input_channels(inputChannels), kernels(kernels),
+                                                             bias_vector(biasVector), output_channels(outputChannels),
+                                                             kernel_size(kernelSize), padding(padding) {}
 
-Conv2D::Conv2D(int inputN, int inputM, int inputChannels, double ***kernels, int outputChannels, int kernelSize,
-               std::string padding) : input_N(inputN), input_M(inputM), input_channels(inputChannels),
-                                             kernels(kernels), output_channels(outputChannels), kernel_size(kernelSize),
-                                             padding(std::move(padding)) {}
 
 double **Conv2D::forward(double **input) {
     auto** output = static_cast<double **>(malloc(output_channels * sizeof(double *)));
@@ -38,9 +40,12 @@ double **Conv2D::forward(double **input) {
                     partial_output_all_channels = mat_add(partial_output_all_channels, partial_output_single_channel, input_N - kernel_size + 1, input_M - kernel_size + 1, input_N - kernel_size + 1, input_M - kernel_size + 1);
             }
         }
+        partial_output_all_channels = mat_add_scalar(partial_output_all_channels, bias_vector[i], input_N, input_M);
         output[i] = partial_output_all_channels;
     }
     return output;
 }
+
+
 
 

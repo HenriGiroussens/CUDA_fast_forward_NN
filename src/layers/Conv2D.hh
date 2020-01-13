@@ -15,14 +15,15 @@ private:
     int input_M;
     int input_channels;
     double*** kernels;
+    double* bias_vector;
     int output_channels;
     int kernel_size;
     std::string padding;
 
 
 public:
-    Conv2D(int inputN, int inputM, int inputChannels, double ***kernels, int outputChannels, int kernelSize,
-           std::string padding);
+    Conv2D(int inputN, int inputM, int inputChannels, double ***kernels, double *biasVector, int outputChannels,
+           int kernelSize, const std::string &padding);
 
     double** forward(double** input) override;
 };

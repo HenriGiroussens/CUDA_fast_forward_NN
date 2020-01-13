@@ -18,6 +18,23 @@ __global__ void matrixAdditionKernel(double* A, double* B, double* C, int N, int
 }
 
 
+__global__ void matrixAddScalarKernel(double* A, double* B, double scalar, int N, int M) {
+
+    int ROW = blockIdx.y * blockDim.y + threadIdx.y;
+    int COL = blockIdx.x * blockDim.x + threadIdx.x;
+
+    double tmpSum = 0;
+
+
+    if (ROW < N && COL < M) {
+        // each thread computes one element of the block sub-matrix
+        tmpSum += A[ROW * M + COL] + scalar;
+    }
+    B[ROW * M + COL] = tmpSum;
+}
+
+
+
 __global__ void matrixMultiplicationKernel(double* A, double* B, double* C, int NA, int MA, int NB, int MB) {
 
     int ROW = blockIdx.y*blockDim.y+threadIdx.y;
@@ -165,8 +182,23 @@ void matrixAddition(double *A, double *B, double *C, int N, int M) {
         blocksPerGrid.y = ceil(double(M)/double(threadsPerBlock.y));
     }
     matrixAdditionKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, C, N, M);
+}
+
+
+void matrixAddScalar(double *A, double *B, double scalar, int N, int M) {
+    dim3 threadsPerBlock(M, N);
+    dim3 blocksPerGrid(1, 1);
+    if (N*M > 512) {
+        threadsPerBlock.x = 512;
+        threadsPerBlock.y = 512;
+        blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
+        blocksPerGrid.y = ceil(double(M)/double(threadsPerBlock.y));
+    }
+    matrixAddScalarKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, scalar, N, M);
 
 }
+
+
 
 void matrixMultiplication(double *A, double *B, double *C, int NA, int MA, int NB, int MB){
     dim3 threadsPerBlock(MB, NA);

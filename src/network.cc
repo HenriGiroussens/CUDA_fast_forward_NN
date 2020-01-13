@@ -101,9 +101,10 @@ int main() {
                  -1., -1.,
                  1., 1.};
         double B2[2] = {1., 1.};
+        double B1[2] = {1., 1.};
 
 
-        Conv2D conv_1(5, 5, 2, K, 2, 3, "valid");
+        Conv2D conv_1(5, 5, 2, K, B1, 2, 3, "valid");
         Activation act_1("relu", 9, 2);
         Dense dense_2(9, 2, W2, B2);
         Activation act_2("softmax", 2, 1);
@@ -183,9 +184,10 @@ int main() {
                  -1., -1.,
                  1., 1.};
         double B2[2] = {1., 1.};
+        double B1[2] = {1., 1.};
 
 
-        Conv2D conv_1(5, 5, 2, K, 2, 3, "valid");
+        Conv2D conv_1(5, 5, 2, K, B1, 2, 3, "valid");
         Activation act_1("relu", 9, 2);
         Flatten flatten(9, 2);
         Dense dense_2(18, 2, W2, B2);
@@ -257,9 +259,10 @@ int main() {
                  1., 1.,
                  -1., -1.};
         double B2[2] = {1., 1.};
+        double B1[2] = {1., 1.};
 
 
-        Conv2D conv_1(5, 5, 2, K, 2, 3, "same");
+        Conv2D conv_1(5, 5, 2, K, B1, 2, 3, "same");
         Activation act_1("relu", 25, 2);
         AveragePooling2D avg_1(5, 5, 2, 2, "valid");
         Flatten flatten(4, 2);
