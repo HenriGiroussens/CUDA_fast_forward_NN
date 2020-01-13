@@ -14,9 +14,11 @@ class Activation : public Layer {
 private:
     std::string function_name;
     int input_dim;
+    int input_channels;
 
 public:
-    Activation(std::string functionName, int inputDim);
+    Activation(const std::string &functionName, int inputDim, int inputChannels);
+
     double** forward(double** input) override;
 };
 

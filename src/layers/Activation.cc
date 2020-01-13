@@ -7,17 +7,21 @@
 
 #include "Activation.hh"
 
-Activation::Activation(std::string functionName, int inputDim) : function_name(std::move(functionName)),
-                                                                        input_dim(inputDim) {}
-
-
 double **Activation::forward(double **input) {
-    double* output;
-    if (function_name != "softmax")
-        output = apply_fct(input[0], input_dim, function_name);
-    else
-        output = apply_softmax(input[0], input_dim);
-    double** out = &output;
+    auto** out = static_cast<double **>(malloc(input_channels * sizeof(double *)));
+    for (int i = 0; i < input_channels; ++i) {
+        double *output;
+        if (function_name != "softmax")
+            output = apply_fct(input[i], input_dim, function_name);
+        else
+            output = apply_softmax(input[i], input_dim);
+        out[i] = output;
+    }
     return out;
 }
+
+Activation::Activation(const std::string &functionName, int inputDim, int inputChannels) : function_name(functionName),
+                                                                                           input_dim(inputDim),
+                                                                                           input_channels(
+                                                                                                   inputChannels) {}
 

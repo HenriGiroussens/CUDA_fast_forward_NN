@@ -45,7 +45,7 @@ add_executable(network
         src/matrices_operations/apply_softmax.cc
         src/layers/Model.cc
         src/layers/Layer.cc
-        src/layers/Dense.cc src/layers/Conv2D.cc src/layers/Conv2D.hh)
+        src/layers/Dense.cc src/layers/Conv2D.cc src/layers/Conv2D.hh src/layers/Flatten.cc src/layers/Flatten.hh)
 target_compile_features(network PUBLIC)
 target_include_directories(network PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(network PRIVATE ${CUDART_LIBRARY})
