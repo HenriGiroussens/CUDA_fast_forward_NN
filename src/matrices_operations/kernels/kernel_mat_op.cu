@@ -140,7 +140,7 @@ __global__ void matrixAvgPoolingKernel(double *A, double *B, int N, int M, int o
     if (ROW_out < output_N && COL_out < output_M) {
         // each thread computes one element of the block sub-matrix
         for (int i = 0; i < stride; i++) {
-            for (int j = stride; j < stride; j++) {
+            for (int j = 0; j < stride; j++) {
                 int ROW_in = ROW_out * stride + i;
                 int COL_in = COL_out * stride + j;
                 if (ROW_in < N && COL_in < M)

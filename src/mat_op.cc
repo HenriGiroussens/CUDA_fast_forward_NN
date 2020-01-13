@@ -3,10 +3,11 @@
 #include "matrices_operations/matrix_conv.hh"
 #include "matrices_operations/apply_fct.hh"
 #include "matrices_operations/apply_softmax.hh"
+#include "matrices_operations/matrix_avg_pooling.hh"
 
 
 int main() {
-    std::string type("softmax");
+    std::string type("pooling");
 
     if (type=="add") {
         int NA = 4;
@@ -142,6 +143,24 @@ int main() {
         double* C = apply_softmax(A, NA);
         for (int i=0; i<NA; i++) {
             std::cout << C[i] << ' ';
+        }
+    }
+
+    if (type=="pooling") {
+        int NA = 4;
+        int MA = 5;
+        double A[20] =
+                {1., 1., 1., 1., 1.,
+                 1., 1., 1., 1., 1.,
+                 1., 1., 1., 1., 1.,
+                 1., 1., 1., 1., 1.};
+
+        double* C = avg_pooling_2D(A, 4, 5, 2, "valid");
+        for (int i=0; i<2; i++) {
+            for (int j = 0; j < 2; j++) {
+                std::cout << C[i * 2 + j] << ' ';
+            }
+            std::cout << '\n';
         }
     }
 }
