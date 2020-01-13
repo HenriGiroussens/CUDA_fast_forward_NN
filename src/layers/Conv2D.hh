@@ -13,14 +13,18 @@ class Conv2D : public Layer {
 private:
     int input_N;
     int input_M;
-    double* kernel;
+    int input_channels;
+    double*** kernels;
+    int output_channels;
     int kernel_size;
     std::string padding;
 
-public:
-    Conv2D(int inputN, int inputM, double *kernel, int kernelSize, std::string padding);
 
-    double* forward(double* input) override;
+public:
+    Conv2D(int inputN, int inputM, int inputChannels, double ***kernels, int outputChannels, int kernelSize,
+           std::string padding);
+
+    double** forward(double** input) override;
 };
 
 

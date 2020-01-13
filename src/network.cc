@@ -12,7 +12,9 @@ int main() {
     std::string mod = "conv";
 
     if (mod == "dense") {
-        double input[5] = {1., 1., 1., 1., 1.};
+        double input_tmp[5] = {1., 1., 1., 1., 1.};
+        double* input_1 = input_tmp;
+        double** input = &input_1;
 
         double W1[25] =
                 {1., 1., 1., 1., 1.,
@@ -40,16 +42,21 @@ int main() {
     }
 
     if (mod == "conv") {
-        double A[25] =
+        double A_tmp[25] =
                 {3., 3., 2., 1., 0.,
                  0., 0., 1., 3., 1.,
                  3., 1., 2., 2., 3.,
                  2., 0., 0., 2., 2,
                  2., 0., 0., 0., 1.};
+        double* A_1 = A_tmp;
+        double** A = &A_1;
 
-        double K[9] = {0., 1., 2.,
+        double K_in [9] = {0., 1., 2.,
                       2., 2., 0.,
                       0., 1., 2.};
+        double *K_1 = K_in;
+        double **K_2 = &K_1;
+        double ***K = &K_2;
         double W2[18] =
                 {1., 1.,
                  -1., -1.,
@@ -63,7 +70,7 @@ int main() {
         double B2[2] = {1., 1.};
 
 
-        Conv2D conv_1(5, 5, K, 3, "valid");
+        Conv2D conv_1(5, 5, 1, K, 1, 3, "valid");
         Activation act_1("relu", 9);
         Dense dense_2(9, 2, W2, B2);
         Activation act_2("softmax", 2);

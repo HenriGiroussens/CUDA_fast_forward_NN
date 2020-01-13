@@ -17,7 +17,7 @@ private:
 
 public:
     Activation(std::string functionName, int inputDim);
-    double* forward(double* input) override;
+    double** forward(double** input) override;
 };
 
 #endif //GPGPU_ACTIVATION_HH

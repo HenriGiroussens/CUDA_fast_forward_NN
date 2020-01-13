@@ -21,7 +21,8 @@ private:
 public:
     Dense(int inputDim, int outputDim, double *weightMatrix, double *biasVector);
 
-    double* forward(double* input) override;
+    double** forward(double** input) override;
+
 
 };
 

@@ -10,9 +10,14 @@
 Activation::Activation(std::string functionName, int inputDim) : function_name(std::move(functionName)),
                                                                         input_dim(inputDim) {}
 
-double *Activation::forward(double *input) {
+
+double **Activation::forward(double **input) {
+    double* output;
     if (function_name != "softmax")
-        return apply_fct(input, input_dim, function_name);
-    return apply_softmax(input, input_dim);
+        output = apply_fct(input[0], input_dim, function_name);
+    else
+        output = apply_softmax(input[0], input_dim);
+    double** out = &output;
+    return out;
 }
 
