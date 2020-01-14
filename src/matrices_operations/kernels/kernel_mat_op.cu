@@ -175,9 +175,9 @@ __global__ void matrixAvgPoolingKernel(double *A, double *B, int N, int M, int o
 void matrixAddition(double *A, double *B, double *C, int N, int M) {
     dim3 threadsPerBlock(M, N);
     dim3 blocksPerGrid(1, 1);
-    if (N*M > 512) {
-        threadsPerBlock.x = 512;
-        threadsPerBlock.y = 512;
+    if (N*M > 1024) {
+        threadsPerBlock.x = 32;
+        threadsPerBlock.y = 32;
         blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(M)/double(threadsPerBlock.y));
     }
@@ -188,9 +188,9 @@ void matrixAddition(double *A, double *B, double *C, int N, int M) {
 void matrixAddScalar(double *A, double *B, double scalar, int N, int M) {
     dim3 threadsPerBlock(M, N);
     dim3 blocksPerGrid(1, 1);
-    if (N*M > 512) {
-        threadsPerBlock.x = 512;
-        threadsPerBlock.y = 512;
+    if (N*M > 1024) {
+        threadsPerBlock.x = 32;
+        threadsPerBlock.y = 32;
         blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(M)/double(threadsPerBlock.y));
     }
@@ -203,9 +203,9 @@ void matrixAddScalar(double *A, double *B, double scalar, int N, int M) {
 void matrixMultiplication(double *A, double *B, double *C, int NA, int MA, int NB, int MB){
     dim3 threadsPerBlock(MB, NA);
     dim3 blocksPerGrid(1, 1);
-    if (NA*NA > 512) {
-        threadsPerBlock.x = 512;
-        threadsPerBlock.y = 512;
+    if (NA*NA > 1024) {
+        threadsPerBlock.x = 32;
+        threadsPerBlock.y = 32;
         blocksPerGrid.x = ceil(double(NA)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(NA)/double(threadsPerBlock.y));
     }
@@ -215,9 +215,9 @@ void matrixMultiplication(double *A, double *B, double *C, int NA, int MA, int N
 void matrixConvSame(double *A, double *K, double *C, int N, int M, int KN) {
     dim3 threadsPerBlock(M, N);
     dim3 blocksPerGrid(1, 1);
-    if (M*N > 512) {
-        threadsPerBlock.x = 512;
-        threadsPerBlock.y = 512;
+    if (M*N > 1024) {
+        threadsPerBlock.x = 32;
+        threadsPerBlock.y = 32;
         blocksPerGrid.x = ceil(double(M)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(N)/double(threadsPerBlock.y));
     }
@@ -228,9 +228,9 @@ void matrixConvSame(double *A, double *K, double *C, int N, int M, int KN) {
 void matrixConvValid(double *A, double *K, double *C, int N, int M, int KN) {
     dim3 threadsPerBlock(M - 2*(KN/2), N - 2*(KN/2));
     dim3 blocksPerGrid(1, 1);
-    if (M*N > 512) {
-        threadsPerBlock.x = 512;
-        threadsPerBlock.y = 512;
+    if (M*N > 1024) {
+        threadsPerBlock.x = 32;
+        threadsPerBlock.y = 32;
         blocksPerGrid.x = ceil(double(M)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(N)/double(threadsPerBlock.y));
     }
@@ -241,8 +241,8 @@ void matrixConvValid(double *A, double *K, double *C, int N, int M, int KN) {
 void matrixApplyFunction(double* A, double* B, int N, std::string func) {
     dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
-    if (N > 512) {
-        threadsPerBlock.x = 512;
+    if (N > 1024) {
+        threadsPerBlock.x = 1024;
         blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
     }
     int func_id = -1;
@@ -261,8 +261,8 @@ void matrixApplyFunction(double* A, double* B, int N, std::string func) {
 void matrixApplySoftmax(double* A, double* B, int N, double* sum) {
     dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
-    if (N > 512) {
-        threadsPerBlock.x = 512;
+    if (N > 1024) {
+        threadsPerBlock.x = 1024;
         blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
     }
     matrixApplySoftmaxKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, N, sum);
@@ -272,8 +272,8 @@ void matrixApplySoftmax(double* A, double* B, int N, double* sum) {
 void matrixSum(double* A, double*buff, int N) {
     dim3 threadsPerBlock(N);
     dim3 blocksPerGrid(1);
-    if (N > 512) {
-        threadsPerBlock.x = 512;
+    if (N > 1024) {
+        threadsPerBlock.x = 1024;
         blocksPerGrid.x = ceil(double(N)/double(threadsPerBlock.x));
     }
     matrixApplySumKernel<<<blocksPerGrid,threadsPerBlock>>>(A, buff, N);
@@ -283,9 +283,9 @@ void matrixSum(double* A, double*buff, int N) {
 void matrixAvgPooling(double *A, double *B, int N, int M, int output_N, int output_M, int stride) {
     dim3 threadsPerBlock(output_M, output_N);
     dim3 blocksPerGrid(1, 1);
-    if (M*N > 512) {
-        threadsPerBlock.x = 512;
-        threadsPerBlock.y = 512;
+    if (M*N > 1024) {
+        threadsPerBlock.x = 32;
+        threadsPerBlock.y = 32;
         blocksPerGrid.x = ceil(double(M)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(N)/double(threadsPerBlock.y));
     }

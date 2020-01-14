@@ -6,17 +6,18 @@
 #define GPGPU_MODEL_HH
 
 
+#include <vector>
 #include "Layer.hh"
 
 class Model {
 private:
-    Layer** layers;
+    std::vector<Layer*> layers;
     int nb_layers;
     int input_dim;
     int output_dim;
 
 public:
-    Model(Layer **layers, int nbLayers, int inputDim, int outputDim);
+    Model(std::vector<Layer*> layers, int nbLayers, int inputDim, int outputDim);
 
     double* predict(double** input);
 };

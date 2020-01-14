@@ -35,6 +35,7 @@ target_link_libraries(mat_op PRIVATE ${CUDART_LIBRARY})
 
 
 add_executable(network
+        src/model_loading/load_weights.cc
         src/matrices_operations/matrix_add.cu
         src/matrices_operations/matrix_mult.cu
         src/matrices_operations/kernels/kernel_mat_op.cu
@@ -57,8 +58,3 @@ target_compile_features(cam PUBLIC)
 target_include_directories(cam PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
 target_link_libraries(cam PRIVATE ${CUDART_LIBRARY} ${OpenCV_LIBS})
 
-add_executable(loading
-        src/model_loading/load_weights.cc)
-target_compile_features(loading PUBLIC)
-target_include_directories(loading PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
-target_link_libraries(loading PRIVATE ${CUDART_LIBRARY} ${OpenCV_LIBS})

@@ -15,10 +15,10 @@ private:
     int input_M;
     int input_channels;
     int strides;
-    std::string padding;
+    bool padding_valid;
 
 public:
-    AveragePooling2D(int inputN, int inputM, int inputChannels, int strides, const std::string &padding);
+    AveragePooling2D(int inputN, int inputM, int inputChannels, int strides, const bool &padding);
 
     double **forward(double **input) override;
 };

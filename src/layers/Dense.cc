@@ -20,4 +20,17 @@ double **Dense::forward(double **input) {
     return out;
 }
 
+Dense::Dense(int inputDim, int outputDim) : input_dim(inputDim), output_dim(outputDim) {}
+
+void Dense::setWeightMatrix(double *weightMatrix) {
+    weight_matrix = weightMatrix;
+}
+
+void Dense::setBiasVector(double *biasVector) {
+    bias_vector = biasVector;
+}
+
+Dense::~Dense() {
+}
+
 

@@ -10,6 +10,6 @@
 #include <cmath>
 #include <cuda_runtime.h>
 
-double* avg_pooling_2D(double* A, int N, int M, int strides, std::string padding);
+double* avg_pooling_2D(double* A, int N, int M, int strides, bool padding);
 
 #endif //GPGPU_MATRIX_AVG_POOLING_HH

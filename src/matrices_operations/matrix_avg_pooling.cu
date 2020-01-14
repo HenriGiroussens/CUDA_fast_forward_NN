@@ -5,10 +5,10 @@
 #include "matrix_avg_pooling.hh"
 #include "kernels/kernel_mat_op.hh"
 
-double* avg_pooling_2D(double* A, int N, int M, int strides, std::string padding) {
+double* avg_pooling_2D(double* A, int N, int M, int strides, bool padding_valid) {
     int output_N = N / strides;
     int output_M = M / strides;
-    if (padding == "same") {
+    if (!padding_valid) {
         if (N%strides != 0)
             output_N++;
         if (M%strides != 0)

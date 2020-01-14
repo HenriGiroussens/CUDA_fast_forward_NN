@@ -2,10 +2,12 @@
 // Created by henri on 11/01/2020.
 //
 
+#include <utility>
+
 #include "Model.hh"
 
 
-Model::Model(Layer **layers, int nbLayers, int inputDim, int outputDim) : layers(layers), nb_layers(nbLayers),
+Model::Model(std::vector<Layer*> layers, int nbLayers, int inputDim, int outputDim) : layers(std::move(layers)), nb_layers(nbLayers),
                                                                          input_dim(inputDim), output_dim(outputDim) {}
 
 

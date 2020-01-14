@@ -20,6 +20,13 @@ private:
 
 public:
     Dense(int inputDim, int outputDim, double *weightMatrix, double *biasVector);
+    Dense(int inputDim, int outputDim);
+
+    virtual ~Dense();
+
+    void setWeightMatrix(double *weightMatrix);
+
+    void setBiasVector(double *biasVector);
 
     double** forward(double** input) override;
 
