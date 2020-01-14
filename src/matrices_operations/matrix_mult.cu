@@ -35,15 +35,21 @@ double* mat_mult(double* A, double* B, int NA, int MA, int NB, int MB)
     rc = cudaMemcpy(d_A, &A[0], SIZE_A * sizeof(double), cudaMemcpyHostToDevice);
     if (rc)
         std::cout << "error memcpy\n";
-    cudaMemcpy(d_B, &B[0], SIZE_B * sizeof(double), cudaMemcpyHostToDevice);
-    cudaMemset(d_C, 0, SIZE_C * sizeof(double));
+    rc = cudaMemcpy(d_B, &B[0], SIZE_B * sizeof(double), cudaMemcpyHostToDevice);
+    if (rc)
+        std::cout << "error memcpy\n";
+    rc = cudaMemset(d_C, 0, SIZE_C * sizeof(double));
+    if (rc)
+        std::cout << "error memset\n";
 
     // call the kernel
     matrixMultiplication(d_A, d_B, d_C, NA, MA, NB, MB);
     cudaDeviceSynchronize();
 
     // copy memory back to host
-    cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(double), cudaMemcpyDeviceToHost);
+    rc = cudaMemcpy(&C[0], d_C, SIZE_C * sizeof(double), cudaMemcpyDeviceToHost);
+    if (rc)
+        fprintf(stderr,"GPUassert: %s \n", cudaGetErrorString(rc));
     cudaFree(d_A);
     cudaFree(d_B);
     cudaFree(d_C);

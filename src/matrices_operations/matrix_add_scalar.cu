@@ -28,7 +28,7 @@ double* mat_add_scalar(double* A, double scalar, int N, int M) {
     cudaDeviceSynchronize();
 
     // copy memory back to host
-    cudaMemcpy(&B[0], d_B, SIZE * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(&B[0], d_A, SIZE * sizeof(double), cudaMemcpyDeviceToHost);
 
     cudaFree(d_A);
     cudaFree(d_B);

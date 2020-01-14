@@ -7,14 +7,8 @@ __global__ void matrixAdditionKernel(double* A, double* B, double* C, int N, int
     int ROW = blockIdx.y * blockDim.y + threadIdx.y;
     int COL = blockIdx.x * blockDim.x + threadIdx.x;
 
-    double tmpSum = 0;
 
-
-    if (ROW < N && COL < M) {
-        // each thread computes one element of the block sub-matrix
-        tmpSum += A[ROW * M + COL] + B[ROW * M + COL];
-    }
-    C[ROW * M + COL] = tmpSum;
+    A[ROW * M + COL] += B[ROW * M + COL];
 }
 
 
@@ -23,14 +17,7 @@ __global__ void matrixAddScalarKernel(double* A, double* B, double scalar, int N
     int ROW = blockIdx.y * blockDim.y + threadIdx.y;
     int COL = blockIdx.x * blockDim.x + threadIdx.x;
 
-    double tmpSum = 0;
-
-
-    if (ROW < N && COL < M) {
-        // each thread computes one element of the block sub-matrix
-        tmpSum += A[ROW * M + COL] + scalar;
-    }
-    B[ROW * M + COL] = tmpSum;
+    A[ROW * M + COL] = A[ROW * M + COL] + scalar;
 }
 
 
@@ -43,7 +30,6 @@ __global__ void matrixMultiplicationKernel(double* A, double* B, double* C, int 
     double tmpSum = 0;
 
     if (ROW < NA && COL < MB) {
-        // each thread computes one element of the block sub-matrix
         for (int i = 0; i < MA; i++) {
             tmpSum += A[ROW * MA + i] * B[i * MB + COL];
         }
@@ -135,7 +121,9 @@ __global__ void matrixApplySumKernel(double* A, double* res, int N) {
 // reading from global memory, writing to shared memory
     unsigned int tid = threadIdx.x;
     unsigned int i = blockIdx.x*(blockDim.x*2) + threadIdx.x;
-    sdata[tid] = A[i] + A[i+blockDim.x];
+    sdata[tid] = 0;
+    sdata[tid] += A[i];
+    sdata[tid] += A[i+blockDim.x];
     __syncthreads();
 // do reduction in shared mem
     for (unsigned int s=blockDim.x/2; s>0; s>>=1) {
@@ -203,10 +191,10 @@ void matrixAddScalar(double *A, double *B, double scalar, int N, int M) {
 void matrixMultiplication(double *A, double *B, double *C, int NA, int MA, int NB, int MB){
     dim3 threadsPerBlock(MB, NA);
     dim3 blocksPerGrid(1, 1);
-    if (NA*NA > 1024) {
+    if (MB*NA > 1024) {
         threadsPerBlock.x = 32;
         threadsPerBlock.y = 32;
-        blocksPerGrid.x = ceil(double(NA)/double(threadsPerBlock.x));
+        blocksPerGrid.x = ceil(double(MB)/double(threadsPerBlock.x));
         blocksPerGrid.y = ceil(double(NA)/double(threadsPerBlock.y));
     }
     matrixMultiplicationKernel<<<blocksPerGrid,threadsPerBlock>>>(A, B, C, NA, MA, NB, MB);
@@ -270,7 +258,7 @@ void matrixApplySoftmax(double* A, double* B, int N, double* sum) {
 
 
 void matrixSum(double* A, double*buff, int N) {
-    dim3 threadsPerBlock(N);
+    dim3 threadsPerBlock(N/2);
     dim3 blocksPerGrid(1);
     if (N > 1024) {
         threadsPerBlock.x = 1024;

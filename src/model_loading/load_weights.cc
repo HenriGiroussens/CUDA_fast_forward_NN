@@ -57,28 +57,30 @@ Model* get_model() {
     auto* act_1_1 = new Activation("relu", 46*46, 32);
     auto* conv_1_2 = new Conv2D(46, 46, 32, 32, 3, true);
     auto* act_1_2 = new Activation("relu", 44*44, 32);
-    auto* avg_1 = new AveragePooling2D(44, 44, 32, 2, true);
+    auto* conv_1_3 = new Conv2D(44, 44, 32, 32, 3, true);
+    auto* act_1_3 = new Activation("relu", 42*42, 32);
+    auto* avg_1 = new AveragePooling2D(42, 42, 32, 2, true);
 
 
-    auto* conv_2_1 = new Conv2D(22, 22, 32,64, 3, true);
-    auto* act_2_1 = new Activation("relu", 20*20, 64);
-    auto* conv_2_2 = new Conv2D(20, 20, 64, 64, 3, true);
-    auto* act_2_2 = new Activation("relu", 18*18, 64);
-    auto* conv_2_3 = new Conv2D(18, 18, 64, 64, 3, true);
-    auto* act_2_3 = new Activation("relu", 16*16, 64);
-    auto* avg_2 = new AveragePooling2D(16, 16, 64, 2, true);
+    auto* conv_2_1 = new Conv2D(21, 21, 32,64, 3, true);
+    auto* act_2_1 = new Activation("relu", 19*19, 64);
+    auto* conv_2_2 = new Conv2D(19, 19, 64, 64, 3, true);
+    auto* act_2_2 = new Activation("relu", 17*17, 64);
+    auto* conv_2_3 = new Conv2D(17, 17, 64, 64, 3, true);
+    auto* act_2_3 = new Activation("relu", 15*15, 64);
+    auto* avg_2 = new AveragePooling2D(16, 16, 64, 5, true);
 
-    auto* flatten = new Flatten(8*8, 64);
-    auto* dense_1 = new Dense(8*8*64, 64);
+    auto* flatten = new Flatten(3*3, 64);
+    auto* dense_1 = new Dense(3*3*64, 64);
     auto* act_1 = new Activation("relu", 64, 1);
     auto* dense_2 = new Dense(64, 32);
     auto* act_2 = new Activation("relu", 32, 1);
     auto dense_3 = new Dense(32, 1);
     auto* act_3 = new Activation("sigmoid", 1, 1);
 
-    Conv2D *conv_layers[5] = {conv_1_1, conv_1_2, conv_2_1, conv_2_2, conv_2_3};
+    Conv2D *conv_layers[6] = {conv_1_1, conv_1_2, conv_1_3, conv_2_1, conv_2_2, conv_2_3};
     Dense *dense_layers[3] = {dense_1, dense_2, dense_3};
-    std::vector<Layer*> all_layers ({conv_1_1, act_1_1, conv_1_2, act_1_2, avg_1,
+    std::vector<Layer*> all_layers ({conv_1_1, act_1_1, conv_1_2, act_1_2, conv_1_3, act_1_3, avg_1,
                              conv_2_1, act_2_1, conv_2_2, act_2_2, conv_2_3, act_2_3, avg_2,
                              flatten, dense_1, act_1, dense_2, act_2, dense_3, act_3});
 
@@ -150,7 +152,7 @@ Model* get_model() {
                     weights[0] = stod(weightsline);
                 layer[i] = weights;
             }
-            dense_layers[current_layer - 5]->setWeightMatrix(weights);
+            dense_layers[current_layer - 6]->setWeightMatrix(weights);
         }
         else if (line == "Dense - bias") {
             std::cout << line << std::endl;
@@ -169,7 +171,7 @@ Model* get_model() {
                 split(weightsline, bias);
             else
                 bias[0] = stod(weightsline);
-            dense_layers[current_layer - 5]->setBiasVector(bias);
+            dense_layers[current_layer - 6]->setBiasVector(bias);
             current_layer++;
         }
     }

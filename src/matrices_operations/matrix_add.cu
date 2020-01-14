@@ -39,7 +39,7 @@ double* mat_add(double* A, double* B, int NA, int MA, int NB, int MB)
     cudaDeviceSynchronize();
 
     // copy memory back to host
-    cudaMemcpy(&C[0], d_C, SIZE * sizeof(double), cudaMemcpyDeviceToHost);
+    cudaMemcpy(&C[0], d_A, SIZE * sizeof(double), cudaMemcpyDeviceToHost);
 
     cudaFree(d_A);
     cudaFree(d_B);

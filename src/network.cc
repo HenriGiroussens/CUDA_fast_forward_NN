@@ -192,7 +192,7 @@ int main() {
         Activation act_1("relu", 9, 2);
         Flatten flatten(9, 2);
         Dense dense_2(18, 2, W2, B2);
-        Activation act_2("softmax", 2, 1);
+        Activation act_2("sigmoid", 2, 1);
         std::vector<Layer*> layers({&conv_1, &act_1, &flatten, &dense_2, &act_2});
         Model model(layers, 5, 5, 2);
         double *output = model.predict(A);
@@ -268,7 +268,7 @@ int main() {
         AveragePooling2D avg_1(5, 5, 2, 2, true);
         Flatten flatten(4, 2);
         Dense dense_2(8, 2, W2, B2);
-        Activation act_2("softmax", 2, 1);
+        Activation act_2("sigmoid", 2, 1);
         std::vector<Layer*> layers({&conv_1, &act_1, &avg_1, &flatten, &dense_2, &act_2});
         Model model(layers, 6, 5, 2);
         double *output = model.predict(A);

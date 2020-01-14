@@ -14,7 +14,6 @@ double **Flatten::forward(double **input) {
     auto* out = static_cast<double *>(malloc(input_dim * input_channels * sizeof(double)));
     for (int i = 0; i < input_channels; ++i){
         std::memcpy(&out[i*input_dim], input[i], input_dim* sizeof(double));
-        free(input[i]);
     }
     output[0] = out;
     return output;

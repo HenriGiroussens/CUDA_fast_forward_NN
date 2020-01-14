@@ -15,7 +15,6 @@ double **Dense::forward(double **input) {
     double* output_pre_bias = mat_mult(input[0], weight_matrix, 1, input_dim, input_dim, output_dim);
     double* output = mat_add(output_pre_bias, bias_vector, 1, output_dim, 1, output_dim);
     double** out = &output;
-    free(input[0]);
     free(output_pre_bias);
     return out;
 }

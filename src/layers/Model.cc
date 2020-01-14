@@ -3,6 +3,7 @@
 //
 
 #include <utility>
+#include <iostream>
 
 #include "Model.hh"
 
@@ -14,7 +15,7 @@ Model::Model(std::vector<Layer*> layers, int nbLayers, int inputDim, int outputD
 
 double *Model::predict(double **input) {
     double** tmp = layers[0]->forward(input);
-    for (int i = 1; i < nb_layers; ++i) {
+    for (int i = 1; i < 3; ++i) {
         tmp = layers[i]->forward(tmp);
     }
     return tmp[0];
